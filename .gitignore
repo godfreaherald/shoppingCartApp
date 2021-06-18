@@ -1,0 +1,47 @@
+
+
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.vscode
+
+
+
+package-lock.json
+
+
+
+
+# nyc test coverage
+.nyc_output
+
+# tests
+_tests_
+
+
+# Compiled binary addons 
+build/
+
+# Dependency directories
+node_modules/
+
+
+
+
+# dotenv environment variables file
+.env
+.env.test
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+
+
+
+
+
