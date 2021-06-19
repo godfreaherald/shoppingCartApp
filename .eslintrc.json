@@ -1,0 +1,33 @@
+{
+    "env": {
+        "es2021": true,
+        "node": true,
+        "commonjs": true
+    },
+    "plugins": ["prettier"],
+    "extends": ["prettier", "eslint:recommended"],
+
+    "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "rules": {
+        "prettier/prettier": "error",
+        "arrow-body-style": "off",
+        "prefer-arrow-callback": "off",
+
+        "linebreak-style": ["error", "unix"],
+
+        "no-console": ["off"],
+
+        "no-undef": ["off"],
+        "react/no-access-state-in-setstate": ["off"],
+        "no-return-assign": ["off"],
+
+        "import/no-named-as-default": ["off"],
+        "import/no-unresolved": ["off"],
+        "import/named": ["off"],
+
+        "no-unused-vars": ["off"]
+    }
+}
