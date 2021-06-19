@@ -28,6 +28,7 @@
         "import/no-unresolved": ["off"],
         "import/named": ["off"],
 
-        "no-unused-vars": ["off"]
+        "no-unused-vars": ["off"],
+        "quotes": ["error", "backtick"]
     }
 }
