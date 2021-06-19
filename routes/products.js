@@ -1,9 +1,13 @@
 import { Router } from 'express';
-import userController from '../controllers/products';
+import products from '../controllers/products';
+import authenticate from '../middlewares/authenticate';
 
 const router = Router();
 
-router.get(`/list`, userController.products);
-router.get(`/product`, userController.searchProduct);
+router.post(`/`, authenticate, products.create);
+
+router.get(`/list`, products.findAll);
+
+router.get(`/:sku`, products.findBySku);
 
 export default router;
