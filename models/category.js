@@ -17,7 +17,6 @@ Category.getAll = async () => {
 };
 
 Category.findByName = async (category) => {
-    console.log(category);
     return await sql.query(`SELECT * FROM categories WHERE categoryName = '${category}'`);
 };
 
