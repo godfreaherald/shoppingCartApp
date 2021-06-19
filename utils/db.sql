@@ -16,3 +16,11 @@ CREATE TABLE IF NOT EXISTS `shop`.`user` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `unq_mobile` (`mobile` ASC),
   UNIQUE INDEX `unq_email` (`email` ASC) );
+
+  -- CREATE THE CATEGORIES TABLE
+  CREATE TABLE IF NOT EXISTS `shop`.`categories` (
+  id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  categoryName VARCHAR(255) NOT NULL
+);
+ALTER TABLE `shop`.`categories` 
+ADD  UNIQUE INDEX `idx_category` (`categoryName` ASC);
