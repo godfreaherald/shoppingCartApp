@@ -3,6 +3,7 @@ import 'dotenv/config';
 import cors from 'cors';
 import productsRoute from './routes/products';
 import userRoute from './routes/user';
+import cartRoute from './routes/cart';
 import categoryRoute from './routes/categories';
 
 import handleErrors from './middlewares/handleErrors';
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use(`/products`, productsRoute);
 app.use(`/user`, userRoute);
+app.use(`/cart`, cartRoute);
 app.use(`/category`, categoryRoute);
 
 app.use((req, res, next) => {

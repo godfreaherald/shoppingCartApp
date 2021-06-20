@@ -20,7 +20,7 @@ export default async (req, res, next) => {
                 if (user) {
                     console.log(user.admin);
                     const isAdmin = user.admin == 1 ? true : false;
-                    if (!isAdmin) {
+                    if (!isAdmin || !req.body.shopping) {
                         throw new UnauthorisedRequest(`User not authorised to perform this operation`);
                     }
                     next();

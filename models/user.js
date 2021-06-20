@@ -67,7 +67,7 @@ User.userObject = function userObject(user) {
 };
 
 User.jwtGenerator = function (user) {
-    return jwt.sign({ email: user.email, _id: user.id, mobile: user.mobile }, JWT_SECRET);
+    return jwt.sign({ email: user.email, _id: user.id, mobile: user.mobile }, JWT_SECRET, { expiresIn: `1h` });
 };
 
 User.setPassword = function (password) {

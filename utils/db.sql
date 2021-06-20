@@ -57,3 +57,68 @@ CREATE TABLE IF NOT EXISTS `shop`.`products` (
 
     ALTER TABLE `shop`.`products` 
 ADD  UNIQUE INDEX `idx_products_sku` (`sku` ASC);
+
+
+--ORDER TABLE
+
+CREATE TABLE `shop`.`orders` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `userId` BIGINT NULL DEFAULT NULL,
+  `grandTotal` FLOAT NOT NULL DEFAULT 0,
+  `address` VARCHAR(50) NULL DEFAULT NULL,
+  `new` SMALLINT NOT NULL DEFAULT 1,
+ `createdAt`  DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME ON UPDATE CURRENT_TIMESTAMP,
+  INDEX `idx_order` (`id` ASC),
+  INDEX `idx_user_order` (`userId` ASC),
+
+  PRIMARY KEY (`id`),
+ CONSTRAINT `fk_order_user`
+    FOREIGN KEY (`userId`)
+    REFERENCES `shop`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+-- CREATE THE CART TABLE - virtual carts to store the user selection before creating 
+--the actual order. Incase  the payment is cancelled or fails, these carts 
+--can be used as an unsuccessiful orders by the sales team to follow up the buyers' behavior. 
+ CREATE TABLE IF NOT EXISTS `shop`.`cart` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `userId` BIGINT NULL DEFAULT NULL,
+  `productId` BIGINT NOT NULL,
+  `orderId` BIGINT NOT NULL,
+   
+   `quantity` INT NOT NULL DEFAULT 0,
+  `subTotal` FLOAT NOT NULL DEFAULT 0,
+   `createdAt`  DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `idx_user_cart` (`userId` ASC),
+  INDEX `idx_cart` (`id` ASC),
+  CONSTRAINT `fk_user_cart`
+    FOREIGN KEY (`userId`)
+    REFERENCES `shop`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+
+  CONSTRAINT `fk__product_cart`
+    FOREIGN KEY (`productId`)
+    REFERENCES `shop`.`products` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+   CONSTRAINT `fk__order_cart`
+    FOREIGN KEY (`orderId`)
+    REFERENCES `shop`.`orders` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+
+
+
+
+
+
+
+
