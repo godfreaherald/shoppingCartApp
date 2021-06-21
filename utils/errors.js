@@ -11,6 +11,13 @@ class GeneralError extends Error {
         if (this instanceof UnauthorisedRequest) {
             return 401;
         }
+        if (this instanceof ConnectionFailed) {
+            return 403;
+        }
+        if (this instanceof InsufficientStock) {
+            return 400;
+        }
+
         if (this instanceof NotFound) {
             return 404;
         }
@@ -35,9 +42,23 @@ class NotFound extends GeneralError {
     }
 }
 
+class InsufficientStock extends GeneralError {
+    constructor(message) {
+        super(message);
+    }
+}
+
+class ConnectionFailed extends GeneralError {
+    constructor(message) {
+        super(message);
+    }
+}
+
 module.exports = {
     GeneralError,
     BadRequest,
+    InsufficientStock,
     UnauthorisedRequest,
-    NotFound
+    NotFound,
+    ConnectionFailed
 };

@@ -3,7 +3,7 @@ import sql from './db.js';
 // constructor
 const Cart = function (cartData) {
     this.userId = cartData.userId;
-    this.quantity = cartData.quantity;
+    this.quantity = cartData.quantity || 1;
     this.productId = cartData.productId;
     this.subTotal = cartData.subTotal;
     this.orderId = cartData.orderId;
@@ -56,6 +56,25 @@ Cart.fetchItemFromUsersCurrentCart = async (userId, productId) => {
 
 Cart.deleteFromCart = async (cartId) => {
     return await sql.query(`delete from cart WHERE id = '${cartId}'`);
+};
+
+Cart.setIsolationLevel = async () => {
+    await sql.query(`SET TRANSACTION ISOLATION LEVEL READ COMMITTED`);
+};
+Cart.beginTransaction = async () => {
+    await sql.beginTransaction();
+};
+
+Cart.commitTransaction = async () => {
+    await sql.commit();
+};
+
+Cart.rollBackTransaction = async () => {
+    await sql.rollback();
+};
+
+Cart.closeConnection = async () => {
+    await sql.end();
 };
 
 export default Cart;

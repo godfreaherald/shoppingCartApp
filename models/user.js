@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import sql from './db.js';
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET, JWT_EXPIRY } = process.env;
 
 // constructor
 const User = function (user) {
@@ -67,7 +67,7 @@ User.userObject = function userObject(user) {
 };
 
 User.jwtGenerator = function (user) {
-    return jwt.sign({ email: user.email, _id: user.id, mobile: user.mobile }, JWT_SECRET, { expiresIn: `1h` });
+    return jwt.sign({ email: user.email, _id: user.id, mobile: user.mobile }, JWT_SECRET, { expiresIn: JWT_EXPIRY });
 };
 
 User.setPassword = function (password) {

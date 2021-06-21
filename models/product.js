@@ -27,6 +27,18 @@ Product.getAll = async () => {
 Product.findBySku = async (sku) => {
     return await sql.query(`SELECT * FROM products WHERE sku = '${sku}'`);
 };
+Product.LockTableBySKU = async (sku) => {
+    //Lock the products Table row by SKU column
+    await sql.execute(`SELECT id, title FROM products WHERE sku = '${sku}' FOR UPDATE`);
+};
+
+Product.findById = async (id) => {
+    return await sql.query(`SELECT * FROM products WHERE id = '${id}'`);
+};
+
+Product.UpdateProductQuantity = async (quantity, producId) => {
+    return await sql.execute(`UPDATE products SET quantity = ? WHERE id =?`, [quantity, producId]);
+};
 
 Product.productDTO = function productDTO(product) {
     return {

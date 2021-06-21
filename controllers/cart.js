@@ -1,9 +1,28 @@
-import { NotFound } from '../utils/errors';
+import { NotFound, InsufficientStock, BadRequest, ConnectionFailed } from '../utils/errors';
 import Cart from '../models/cart.js';
+import Product from '../models/product.js';
 
 exports.addToCart = async (req, res, next) => {
+    const requestData = req.body;
+
     try {
-        const requestData = req.body;
+        if (requestData.quantity <= 0) {
+            throw new BadRequest(`Cart items cannot be less than one. Your cart items quantity: ${requestData.quantity} `);
+        }
+
+        await Cart.setIsolationLevel();
+        await Cart.beginTransaction();
+
+        const ItemToAddToCart = await Product.findById(requestData.productId);
+
+        await Product.LockTableBySKU(ItemToAddToCart.sku);
+
+        const stockBalance = ItemToAddToCart[0].quantity - requestData.quantity;
+        const sufficientStock = stockBalance >= 0 ? true : false;
+
+        if (!sufficientStock) {
+            throw new InsufficientStock(`The item you want to buy is out of stock`);
+        }
 
         let newOrder = await Cart.fetchNewOrder(requestData.userId);
 
@@ -13,7 +32,7 @@ exports.addToCart = async (req, res, next) => {
         }
 
         requestData.orderId = newOrder[0].id;
-        const { orderId, quantity, productId, userId, subTotal } = requestData;
+
         const existing = await Cart.getExistingProductFromCart(requestData);
 
         if (existing && existing.length) {
@@ -23,6 +42,7 @@ exports.addToCart = async (req, res, next) => {
                 subTotal: requestData.subTotal + existing[0].subTotal
             });
         } else {
+            const { orderId, quantity, productId, userId, subTotal } = requestData;
             const cart = new Cart({ orderId, quantity, productId, userId, subTotal });
             await Cart.createCart(cart);
         }
@@ -35,9 +55,15 @@ exports.addToCart = async (req, res, next) => {
             grandTotal
         });
 
+        await Product.UpdateProductQuantity(stockBalance, requestData.productId);
+
+        Cart.commitTransaction();
+        Cart.closeConnection();
         res.status(200).json({ message: `Cart Updated`, data: { cartId: existing[0].id, orderId: newOrder[0].id, cartTotal: grandTotal } });
     } catch (error) {
-        console.log(error);
+        Cart.rollBackTransaction();
+        Cart.closeConnection();
+        console.log(`err`, error);
 
         next(error);
     }
@@ -45,7 +71,27 @@ exports.addToCart = async (req, res, next) => {
 
 exports.removeFromCart = async (req, res, next) => {
     const requestData = req.body;
+    let connection;
     try {
+        if (requestData.quantity <= 0) {
+            throw new BadRequest(`Cart items cannot be less than one. Your cart items quantity: ${requestData.quantity} `);
+        }
+
+        await Cart.setIsolationLevel();
+        await Cart.beginTransaction();
+
+        await Product.LockTableBySKU(ItemToAddToCart.sku);
+
+        const existingCustomerCart = await Cart.getExistingProductFromCart(requestData);
+        const cartBalance = existingCustomerCart[0].quantity - requestData.quantity;
+
+        if (cartBalance < 0) {
+            throw new InsufficientStock(`Your cart items are less than items to be  remove`);
+        }
+
+        const ItemToRemove = Product.findById(requestData.productId);
+        const stockBalance = requestData.quantity + ItemToRemove[0].quantity;
+
         const cartItem = await Cart.fetchItemFromUsersCurrentCart(requestData.userId, requestData.productId);
 
         if (!cartItem || !cartItem.length) {
@@ -74,10 +120,21 @@ exports.removeFromCart = async (req, res, next) => {
 
         await Cart.updateOrder(orderPayload);
 
+        await Product.UpdateProductQuantity(stockBalance, requestData.productId);
+
+        Cart.commitTransaction();
+        Cart.closeConnection();
+
         res.status(200).json({ message: `success`, data: { cartId: cartPayload.id, orderId: orderPayload.id, cartTotal: grandTotal } });
     } catch (error) {
-        console.log(error);
-
-        next(error);
+        try {
+            Cart.rollBackTransaction();
+            Cart.closeConnection();
+            console.log(error);
+            next(error);
+        } catch (err) {
+            console.log(err);
+            next(err);
+        }
     }
 };
