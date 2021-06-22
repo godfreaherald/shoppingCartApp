@@ -1,6 +1,8 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDoc from './swagger.json';
 import productsRoute from './routes/products';
 import userRoute from './routes/user';
 import cartRoute from './routes/cart';
@@ -21,6 +23,8 @@ app.use(`/products`, productsRoute);
 app.use(`/user`, userRoute);
 app.use(`/cart`, cartRoute);
 app.use(`/category`, categoryRoute);
+
+app.use(`/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.use((req, res, next) => {
     const error = new NotFound(`Not found`);

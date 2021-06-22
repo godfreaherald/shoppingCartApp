@@ -8,6 +8,10 @@ class GeneralError extends Error {
         if (this instanceof BadRequest) {
             return 400;
         }
+
+        if (this instanceof TokenExpiredError) {
+            return 403;
+        }
         if (this instanceof UnauthorisedRequest) {
             return 401;
         }
@@ -53,6 +57,11 @@ class ConnectionFailed extends GeneralError {
         super(message);
     }
 }
+class TokenExpiredError extends GeneralError {
+    constructor(message) {
+        super(message);
+    }
+}
 
 module.exports = {
     GeneralError,
@@ -60,5 +69,6 @@ module.exports = {
     InsufficientStock,
     UnauthorisedRequest,
     NotFound,
+    TokenExpiredError,
     ConnectionFailed
 };

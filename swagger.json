@@ -1,0 +1,472 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Shopping Cart App",
+        "description": "Shopping Cart Application API",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "host": "localhost:8081",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "Users",
+            "description": "API for users in the application"
+        },
+        {
+            "name": "Products",
+            "description": "API for products in the application"
+        },
+        {
+            "name": "Categories",
+            "description": "API for categories in the application"
+        },
+        {
+            "name": "Cart",
+            "description": "API for cart in the application"
+        }
+    ],
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+
+    "paths": {
+        "/user/users": {
+            "get": {
+                "tags": ["Users"],
+                "summary": "Get all users in application",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Users"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{email}": {
+            "get": {
+                "tags": ["Users"],
+                "summary": "Get user by email",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "required": true,
+                        "description": "user email"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/": {
+            "post": {
+                "tags": ["Users"],
+                "summary": "Create new user in application",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "User that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "New user is created",
+                        "schema": {
+                            "id": {
+                                "type": "integer",
+                                "uniqueItems": true
+                            },
+                            "email": {
+                                "type": "string",
+                                "uniqueItems": true
+                            },
+                            "mobile": {
+                                "type": "number",
+                                "uniqueItems": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/authentication": {
+            "post": {
+                "tags": ["Users"],
+                "summary": "User Authentication",
+                "parameters": [
+                    {
+                        "name": "credentials",
+                        "in": "body",
+                        "description": "user credentials",
+                        "schema": {
+                            "$ref": "#/definitions/Credentials"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "New user is created",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/category/": {
+            "post": {
+                "tags": ["Categories"],
+                "summary": "Create new category in application",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "body",
+                        "description": "category that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "New Category is created",
+                        "schema": {
+                            "id": {
+                                "type": "integer",
+                                "uniqueItems": true
+                            },
+                            "category": {
+                                "type": "string",
+                                "uniqueItems": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/category/list": {
+            "get": {
+                "tags": ["Categories"],
+                "summary": "Get all categories in application",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Categories"
+                        }
+                    }
+                }
+            }
+        },
+        "/category/{id}": {
+            "get": {
+                "tags": ["Categories"],
+                "summary": "Get category by id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "category id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    }
+                }
+            }
+        },
+        "/category/name/{category}": {
+            "get": {
+                "tags": ["Categories"],
+                "summary": "Get category by id",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "required": true,
+                        "description": "category name"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    }
+                }
+            }
+        },
+
+        "/products/": {
+            "post": {
+                "tags": ["Products"],
+                "summary": "Create new product in application",
+                "parameters": [
+                    {
+                        "name": "product",
+                        "in": "body",
+                        "description": "product that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/Product"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "New Product is created",
+                        "schema": {
+                            "$ref": "#/definitions/Product"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/list": {
+            "get": {
+                "tags": ["Products"],
+                "summary": "Get all products in application",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Products"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{sku}": {
+            "get": {
+                "tags": ["Products"],
+                "summary": "Get product by sku",
+                "parameters": [
+                    {
+                        "name": "sku",
+                        "in": "path",
+                        "required": true,
+                        "description": "product sku"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Product"
+                        }
+                    }
+                }
+            }
+        },
+        "/cart/add": {
+            "post": {
+                "tags": ["Cart"],
+                "summary": "Add item to cart",
+                "parameters": [
+                    {
+                        "name": "cart",
+                        "in": "body",
+                        "description": "item that we want to add",
+                        "schema": {
+                            "$ref": "#/definitions/Cart"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "New cart item added ",
+                        "schema": {
+                            "$ref": "#/definitions/CartResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/cart/remove": {
+            "post": {
+                "tags": ["Cart"],
+                "summary": "Remove/Reduce item from cart",
+                "parameters": [
+                    {
+                        "name": "cart",
+                        "in": "body",
+                        "description": "item that we want to remove/reduce",
+                        "schema": {
+                            "$ref": "#/definitions/Cart"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Cart Item updated",
+                        "schema": {
+                            "$ref": "#/definitions/CartResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Credentials": {
+            "required": ["email", "password"],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "Cart": {
+            "required": ["userId", "productId", "shopping", "quantity", "subTotal"],
+            "properties": {
+                "userId": {
+                    "type": "number"
+                },
+                "productId": {
+                    "type": "number"
+                },
+                "shopping": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "quantity": {
+                    "type": "number"
+                },
+                "subTotal": {
+                    "type": "number"
+                }
+            }
+        },
+
+        "CartResponse": {
+            "required": [],
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object"
+                }
+            }
+        },
+
+        "Category": {
+            "required": ["category"],
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "number"
+                }
+            }
+        },
+        "Categories": {
+            "type": "array",
+            "$ref": "#/definitions/Category"
+        },
+
+        "Product": {
+            "required": ["title", "summary", "sku", "price", "quantity", "categoryId"],
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "summary": {
+                    "type": "string"
+                },
+                "sku": {
+                    "type": "string",
+                    "uniqueItems": true
+                },
+                "price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "number"
+                },
+                "categoryId": {
+                    "type": "number"
+                },
+                "expirationDate": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "number"
+                }
+            }
+        },
+        "Products": {
+            "type": "array",
+            "$ref": "#/definitions/Product"
+        },
+
+        "User": {
+            "required": ["email", "mobile", "firstName", "middleName", "lastName"],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "uniqueItems": true
+                },
+                "isAdmin": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "email": {
+                    "type": "string",
+                    "uniqueItems": true
+                },
+                "password": {
+                    "type": "string"
+                },
+                "mobile": {
+                    "type": "number",
+                    "uniqueItems": true
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "middleName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                }
+            }
+        },
+        "Users": {
+            "type": "array",
+            "$ref": "#/definitions/User"
+        }
+    }
+}

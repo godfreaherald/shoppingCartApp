@@ -6,7 +6,7 @@ const router = Router();
 
 router.post(`/`, validateRegistrationSchema, users.create);
 
-router.post(`/users`, validateLoginSchema, users.login);
+router.post(`/authentication`, validateLoginSchema, users.login);
 
 router.get(`/users`, users.findAll);
 
